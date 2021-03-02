@@ -7,6 +7,7 @@ const authenticate = require('../middleware/authenticate')
 const adminMiddleware = require('../middleware/adminMiddleware')
 const BranchController = require('../controller/BranchController')
 
+
 // Register 
 router.post('/register',AuthController.Register)
 router.post('/login',AuthController.Login)
@@ -24,7 +25,11 @@ router.get('/profile',authenticate.user,UserController.Index)
 //create
 router.post('/admin/branch/create',adminMiddleware.isAdmin,BranchController.Create)
 //All Branch
-router.get('/admin/branch/all',adminMiddleware.isAdmin,BranchController.Index)
+router.get('/admin/branch/all',BranchController.Index)
+
+// Clients
+//create
+router.post('/admin/client/create',adminMiddleware.isAdmin,AdminController.CreateClient)
 
 
 module.exports = router

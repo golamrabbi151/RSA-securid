@@ -9,7 +9,7 @@ const Index = async (req,res,next)=>{
         const allBranch = await Branch.find()
         if(allBranch){
             res.status(200).json({
-                status:true,
+                status:1,
                branch:allBranch
             })
         }
@@ -31,14 +31,14 @@ const Create = async (req,res,next)=>{
             const findBrnach = await Branch.findOne({name})
             if(findBrnach){
                 res.status(409).json({
-                    status:false,
+                    status:0,
                     message:"Branch Already Exist!"
                 })
             }
             const newBranch = new Branch({name})
             newBranch.save()
             res.status(201).json({
-                status:true,
+                status:1,
                 message:"Branch Created Successful"
             })
 

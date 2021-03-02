@@ -1,11 +1,14 @@
 const Admin = require("../models/Admin")
 const User = require("../models/User")
+const Client = require('../models/Client')
+
 
 // All User
 
 const AllUser = async (req,res,next) => {
 
     try{
+
         
         const findAllUser = await User.find({})
 
@@ -16,7 +19,7 @@ const AllUser = async (req,res,next) => {
         }
 
         res.status(404).json({
-            status:false,
+            status:0,
             message:"user not found"
         })
     
@@ -28,7 +31,41 @@ const AllUser = async (req,res,next) => {
 
 }
 
-// Create 
+// Create Clients
+
+const CreateClient = async (req,res,next) =>{
+    try{
+
+        const {
+            name,
+            email,
+            dob,
+            accountNumber,
+            bankName,
+            branch
+        }=req.body
+
+        const newClient = await new Client({
+            'name':name,
+            'email':email,
+            'dob':dob,
+            'accountNumber':accountNumber,
+            'bankName':bankName,
+            'branch':branch
+        })
+
+        newClient.save()
+        res.status(201).json({
+            status:1,
+            message:"Client Create Successful"
+        })
+
+    }catch(error){
+        res.json({
+            error
+        })
+    }
+}
 
 
-module.exports = {AllUser}
+module.exports = {AllUser,CreateClient}

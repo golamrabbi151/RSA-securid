@@ -1,5 +1,6 @@
 const User = require('../models/User')
 const Admin = require('../models/Admin')
+const Client = require('../models/Client')
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 
@@ -12,6 +13,23 @@ const Register = async (req, res, next) => {
             password,
             accountNumber
         } = req.body
+
+        const checkClient = await Client.findOne({accountNumber,email})
+        if(!checkClient){
+            res.status(404).json({
+                status:0,
+                message:"User Information Not Valid"
+            })
+        }
+        const checkUser = await User.findOne({accountNumber,email})
+
+        if(checkUser){
+            res.status(409).json({
+                status:0,
+                message:"User already Created"
+            })
+        }
+
 
         bcrypt.hash(password, 10, function (err, hashedPassword) {
             if (err) {
@@ -29,7 +47,7 @@ const Register = async (req, res, next) => {
 
             user.save()
             res.status(201).json({
-                status: true,
+                status: 1,
                 message: 'User Create Successful'
             })
 
@@ -63,20 +81,20 @@ const Login = async (req, res, next) => {
                     
                     let token = jwt.sign({ email: user.email }, 'sd_s77&*', { expiresIn: '1h' })
                     res.status(200).json({
-                        status: true,
+                        status: 1,
                         message: "Login Successful",
                         token
                     })
                 } else {
                     res.status(404).json({
-                        status: false,
+                        status: 0,
                         message: "password not match"
                     })
                 }
             })
         } else {
             res.status(404).json({
-                status: false,
+                status: 0,
                 message: "user not found"
             })
         }
@@ -103,7 +121,7 @@ const AdminRegister = async (req,res,next) =>{
         bcrypt.hash(password,10,function(err,hashedPassword){
             if(err){
                 res.status(500).json({
-                    status:false,
+                    status:0,
                     message:`${err.message}`
                 })
             }
@@ -117,7 +135,7 @@ const AdminRegister = async (req,res,next) =>{
              CreateAdmin.save()
 
             res.status(201).json({
-                status:true,
+                status:1,
                 message:"Admin Create Successful !"
             })
 
@@ -125,7 +143,7 @@ const AdminRegister = async (req,res,next) =>{
 
     }catch(error){
         res.status(500).json({ 
-            status:false,
+            status:0,
             message:"Internal Sever Error"
         })
     }
@@ -144,7 +162,7 @@ const AdminLogin = async (req,res,next) =>{
             bcrypt.compare(password,checkAdmin.password,function(err,result){
                 if(err){
                     res.status(500).json({
-                        status:false,
+                        status:0,
                         message:err
                     })
                 }
@@ -152,14 +170,14 @@ const AdminLogin = async (req,res,next) =>{
                     console.log(result)
                     let token = jwt.sign({name:checkAdmin.name, email:checkAdmin.email, role:checkAdmin.role},"34xxx&",{expiresIn:'1h'})
                     res.status(200).json({
-                        status:true,
+                        status:1,
                         message:"Login Successful !",
                         token
                     })
 
                 }else{
                     res.status(404).json({
-                        status:false,
+                        status:0,
                         message:"Password Not Match"
                     })
                 }
@@ -167,14 +185,14 @@ const AdminLogin = async (req,res,next) =>{
 
         }else{
             res.status(404).json({
-                status:false,
+                status:0,
                 message:"Email Not Match"
             })
         }
 
     }catch(error){
         res.json({
-            status:false,
+            status:0,
             message:error 
         })
         next()
