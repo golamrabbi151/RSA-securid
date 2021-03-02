@@ -28,4 +28,7 @@ const AllUser = async (req,res,next) => {
 
 }
 
+// Create 
+
+
 module.exports = {AllUser}
