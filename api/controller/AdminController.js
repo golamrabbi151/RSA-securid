@@ -59,16 +59,15 @@ const CreateClient = async (req,res,next) =>{
        const enc = key.encrypt(newClient,'base64')
        console.log(enc)
        console.log("decript: ")
-        console.log(key.decrypt(enc,'utf8'))
+        // console.log(key.decrypt(enc,'utf8'))
 
 
-        fs.writeFile('profile.txt', enc, (err) => {
-            // throws an error, you could also catch it here
-            if (err) throw err;
-        
-            // success case, the file was saved
-            console.log('profile saved!');
-        })
+        var stream = fs.createWriteStream("my_file.txt");
+        stream.once('open', function(fd) {
+          stream.write(enc);
+         
+          stream.end();
+        });
 
 
 
