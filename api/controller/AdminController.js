@@ -1,7 +1,10 @@
 const Admin = require("../models/Admin")
 const User = require("../models/User")
 const Client = require('../models/Client')
-
+const NodeRSA = require("node-rsa")
+const fs = require('fs')
+ 
+const key = new NodeRSA({b: 1024})
 
 // All User
 
@@ -53,16 +56,39 @@ const CreateClient = async (req,res,next) =>{
             'bankName':bankName,
             'branch':branch
         })
+       const enc = key.encrypt(newClient,'base64')
+       console.log(enc)
+       console.log("decript: ")
+        console.log(key.decrypt(enc,'utf8'))
 
-        newClient.save()
-        res.status(201).json({
-            status:1,
-            message:"Client Create Successful"
+
+        fs.writeFile('profile.txt', enc, (err) => {
+            // throws an error, you could also catch it here
+            if (err) throw err;
+        
+            // success case, the file was saved
+            console.log('profile saved!');
+        })
+
+
+
+
+    const saveClient = await newClient.save()
+        
+        if(saveClient){
+            res.status(201).json({
+                status:1,
+                message:"Client Create Successful"
+            })
+        }
+        res.status(200).json({
+            status:0,
+            message:"Client already exist !"
         })
 
     }catch(error){
         res.json({
-            error
+           error: error.message
         })
     }
 }
