@@ -11,7 +11,6 @@ const key = new NodeRSA({b: 1024})
 const AllUser = async (req,res,next) => {
 
     try{
-
         
         const findAllUser = await User.find({})
 
@@ -56,21 +55,16 @@ const CreateClient = async (req,res,next) =>{
             'bankName':bankName,
             'branch':branch
         })
+
+        // encript client info
        const enc = key.encrypt(newClient,'base64')
-       console.log(enc)
-       console.log("decript: ")
         // console.log(key.decrypt(enc,'utf8'))
-
-
-        var stream = fs.createWriteStream("my_file.txt");
+        // Generate .md file
+        var stream = fs.createWriteStream(`./${name}.md`);
         stream.once('open', function(fd) {
           stream.write(enc);
-         
           stream.end();
         });
-
-
-
 
     const saveClient = await newClient.save()
         
