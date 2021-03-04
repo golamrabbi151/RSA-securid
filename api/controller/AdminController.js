@@ -3,31 +3,31 @@ const User = require("../models/User")
 const Client = require('../models/Client')
 const NodeRSA = require("node-rsa")
 const fs = require('fs')
- 
-const key = new NodeRSA({b: 1024})
+
+const key = new NodeRSA({ b: 1024 })
 
 // All User
 
-const AllUser = async (req,res,next) => {
+const AllUser = async (req, res, next) => {
 
-    try{
-        
+    try {
+
         const findAllUser = await User.find({})
 
-        if(findAllUser){
+        if (findAllUser) {
             res.status(200).json({
                 findAllUser
             })
         }
 
         res.status(404).json({
-            status:0,
-            message:"user not found"
+            status: 0,
+            message: "user not found"
         })
-    
-    }catch(error){
+
+    } catch (error) {
         return res.json({
-            error:error
+            error: error
         })
     }
 
@@ -35,8 +35,8 @@ const AllUser = async (req,res,next) => {
 
 // Create Clients
 
-const CreateClient = async (req,res,next) =>{
-    try{
+const CreateClient = async (req, res) => {
+    try {
 
         const {
             name,
@@ -45,46 +45,50 @@ const CreateClient = async (req,res,next) =>{
             accountNumber,
             bankName,
             branch
-        }=req.body
+        } = req.body
 
         const newClient = await new Client({
-            'name':name,
-            'email':email,
-            'dob':dob,
-            'accountNumber':accountNumber,
-            'bankName':bankName,
-            'branch':branch
+            'name': name,
+            'email': email,
+            'dob': dob,
+            'accountNumber': accountNumber,
+            'bankName': bankName,
+            'branch': branch
         })
 
         // encript client info
-       const enc = key.encrypt(newClient,'base64')
+        const enc = key.encrypt(newClient, 'base64')
         // console.log(key.decrypt(enc,'utf8'))
         // Generate .md file
-        var stream = fs.createWriteStream(`./${name}.md`);
-        stream.once('open', function(fd) {
-          stream.write(enc);
-          stream.end();
-        });
 
-    const saveClient = await newClient.save()
-        
-        if(saveClient){
+
+        var stream = fs.createWriteStream(`../${name}.md`);
+        stream.once('open', function (fd) {
+            stream.write(enc);
+            stream.end();
+        });
+// Save Client
+        const saveClient = await newClient.save()
+
+        await Client.findOneAndUpdate({_id:newClient._id},{$set:{encriptInfo:enc}},{new:true}).exec()
+
+        if (saveClient) {
             res.status(201).json({
-                status:1,
-                message:"Client Create Successful"
+                status: 1,
+                message: "Client Create Successful"
             })
         }
         res.status(200).json({
-            status:0,
-            message:"Client already exist !"
+            status: 0,
+            message: "Client already exist !"
         })
 
-    }catch(error){
+    } catch (error) {
         res.json({
-           error: error.message
+            error: error.message
         })
     }
 }
 
 
-module.exports = {AllUser,CreateClient}
+module.exports = { AllUser, CreateClient }

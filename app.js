@@ -2,6 +2,7 @@ const express = require('express')
 const mongoose = require('mongoose')
 const morgan = require('morgan')
 const bodyParser = require('body-parser')
+const fileUpload = require('express-fileupload')
 
 
 const app = express()
@@ -9,6 +10,7 @@ const app = express()
 app.use(morgan('dev'))
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
+app.use(fileUpload())
 
 const auth = require('./api/routes/auth')
 

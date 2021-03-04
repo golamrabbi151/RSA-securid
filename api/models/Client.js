@@ -31,6 +31,11 @@ const ClientSchema = new Schema({
         type:String,
         required:true,
         trim:true
+    },
+    encriptInfo:{
+        type:String,
+        default:null,
+        trim:true
     }
 
 })

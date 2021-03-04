@@ -19,6 +19,17 @@ const UserSchema = new Schema({
         type:Number,
         required:true,
         unique:true
+    },
+    randToken:{
+        type:Number,
+        
+        trim:true,
+        default:0
+    },
+    isActive:{
+        type:String,
+        default:'inactive',
+        enum:['inactive','active']
     }
 
 })
