@@ -20,8 +20,9 @@ router.get('/admin/alluser',adminMiddleware.isAdmin,AdminController.AllUser)
 
 // User profile
 router.get('/profile',authenticate.user,UserController.Index)
-// upload encript file
+// Active User by encripted file data
 router.post('/active/profile',authenticate.user,UserController.ChekcProfile)
+// create Random Token
 router.post('/create/token',authenticate.user,UserController.makeRandomToken)
 
 // Branch 

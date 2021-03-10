@@ -22,14 +22,13 @@ const UserSchema = new Schema({
     },
     randToken:{
         type:Number,
-        
         trim:true,
         default:0
     },
     isActive:{
-        type:String,
-        default:'inactive',
-        enum:['inactive','active']
+        type:Number,
+        default:0,
+        enum:[0,1]
     }
 
 })

@@ -65,14 +65,14 @@ const ChekcProfile = async (req,res,next)=>{
         const checkUser = await Client.findOne({encriptInfo:encriptInfo})
         if(checkUser){
             const fndUsr = await User.findOne({email:email})
-            if(fndUsr.isActive=='active'){
+            if(fndUsr.isActive==1){
                 res.status(203).json({
                     status:0,
                     message:"user already Active"
                 })
                 return
             }
-            const activeusr = await User.findOneAndUpdate({_id:fndUsr._id},{$set:{isActive:'active'}}).exec()
+            const activeusr = await User.findOneAndUpdate({_id:fndUsr._id},{$set:{isActive:1}}).exec()
             if(!activeusr){
                 res.status(203).json({
                     status:0,
