@@ -14,15 +14,46 @@ const AllUser = async (req, res, next) => {
 
         const findAllUser = await User.find({})
 
-        if (findAllUser) {
-            res.status(200).json({
-                findAllUser
+        if (!findAllUser) {
+
+            res.status(404).json({
+                status: 0,
+                message: "user not found"
             })
         }
 
-        res.status(404).json({
+        res.status(200).json({
             status: 0,
-            message: "user not found"
+            message: "all user found",
+            findAllUser
+        })
+
+    } catch (error) {
+        return res.json({
+            error: error
+        })
+    }
+
+}
+
+const AllClient = async (req, res, next) => {
+
+    try {
+
+        const findAllClient = await Client.find({})
+
+        if (!findAllClient) {
+
+            res.status(404).json({
+                status: 0,
+                message: "user not found"
+            })
+        }
+
+        res.status(200).json({
+            status: 0,
+            message: "all user found",
+            findAllClient
         })
 
     } catch (error) {
@@ -91,4 +122,4 @@ const CreateClient = async (req, res) => {
 }
 
 
-module.exports = { AllUser, CreateClient }
+module.exports = { AllUser, CreateClient,AllClient }

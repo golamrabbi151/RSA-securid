@@ -34,6 +34,8 @@ router.get('/admin/branch/all',BranchController.Index)
 // Clients
 //create
 router.post('/admin/client/create',adminMiddleware.isAdmin,AdminController.CreateClient)
+// all user
+router.get('/admin/allclient',adminMiddleware.isAdmin,AdminController.AllClient)
 
 
 module.exports = router

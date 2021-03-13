@@ -3,13 +3,14 @@ const mongoose = require('mongoose')
 const morgan = require('morgan')
 const bodyParser = require('body-parser')
 const fileUpload = require('express-fileupload')
-
+var cors = require('cors')
 
 const app = express()
 
 app.use(morgan('dev'))
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
+app.use(cors())
 app.use(fileUpload())
 
 const auth = require('./api/routes/auth')
