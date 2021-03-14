@@ -93,31 +93,35 @@ const CreateClient = async (req, res) => {
         // Generate .md file
 
 
-        var stream = fs.createWriteStream(`../${name}.md`);
-        stream.once('open', function (fd) {
+        var stream = fs.createWriteStream(`files/${name}.md`);
+        stream.once('open',  function (fd) {
             stream.write(enc);
             stream.end();
+
         });
 // Save Client
         const saveClient = await newClient.save()
 
         await Client.findOneAndUpdate({_id:newClient._id},{$set:{encriptInfo:enc}},{new:true}).exec()
 
-        if (saveClient) {
-            res.status(201).json({
-                status: 1,
-                message: "Client Create Successful"
+        if (!saveClient) {
+            return res.status(200).json({
+                status: 0,
+                message: "Client already exist !"
             })
+            
         }
-        res.status(200).json({
-            status: 0,
-            message: "Client already exist !"
+       
+        res.status(201).json({
+            status: 1,
+            message: "Client Create Successful"
         })
 
     } catch (error) {
-        res.json({
-            error: error.message
-        })
+        // res.json({
+        //     error: error.message
+        // })
+        console.log(error)
     }
 }
 
