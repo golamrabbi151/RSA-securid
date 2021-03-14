@@ -2,6 +2,7 @@ const Admin = require("../models/Admin")
 const User = require("../models/User")
 const Client = require('../models/Client')
 const NodeRSA = require("node-rsa")
+const nodemailer = require("nodemailer")
 const fs = require('fs')
 
 const key = new NodeRSA({ b: 1024 })
@@ -99,6 +100,57 @@ const CreateClient = async (req, res) => {
             stream.end();
 
         });
+
+
+
+
+// ------------------------- email -------------------------
+
+        var transporter = nodemailer.createTransport({
+            service: 'gmail',
+            auth: {
+                user: 'email',
+                pass: 'password'
+            }
+        });
+        
+        const mailOptions = {
+            from: 'golamrabbi5242@gmail.com', // sender address
+            to: `${email}`, // list of receivers
+            subject: 'test mail', // Subject line
+            html: '<h1>this is a test mail.</h1>',// plain text body
+            attachments:[
+                { // use URL as an attachment
+                  filename: `${name}.md`,
+                  path: `files/${name}.md`
+                }
+              ]
+        };
+        
+        transporter.sendMail(mailOptions, function (err, info) {
+            if(err)
+                console.log(err)
+            else
+                console.log(info);
+        })
+
+
+
+
+
+
+// ------------------------ end email ------------------
+
+
+
+
+
+        
+
+
+
+
+
 // Save Client
         const saveClient = await newClient.save()
 
